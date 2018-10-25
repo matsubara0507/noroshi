@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedLabels #-}
 
-module Lib.Cmd
+module Noroshi.Cmd
     ( module X
     , Cmd (..)
     , toCmd
@@ -8,8 +8,8 @@ module Lib.Cmd
 
 import           RIO
 
-import           Lib.Cmd.Options as X
-import           Lib.Cmd.Run     as X
+import           Noroshi.Cmd.Options as X
+import           Noroshi.Cmd.Run     as X
 
 data Cmd
   = PrintVersion
