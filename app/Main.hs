@@ -24,7 +24,7 @@ import           Noroshi.Cmd
 main :: IO ()
 main = withGetOpt "[options] [input-file]" opts $ \r args ->
   case toCmd (#input @= args <: r) of
-    PrintVersion -> B.putStr $ fromString (showVersion version)
+    PrintVersion -> B.putStr $ fromString (showVersion version ++ "\n")
     RunCmd opts' -> run opts'
   where
     opts = #version @= versionOpt
