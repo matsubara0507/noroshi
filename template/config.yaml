@@ -1,2 +1,6 @@
+root: .noroshi
+configs_dir: configs
+outputs_dir: out
+
 bases: []
 configs: []

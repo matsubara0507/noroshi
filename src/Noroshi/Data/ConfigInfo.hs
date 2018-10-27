@@ -33,13 +33,13 @@ getGitHubOwnerAndRepo info = do
   where
     validator (owner, repo) = not (Text.null owner || Text.null repo)
 
-getYamlPath :: ConfigInfo -> FilePath
-getYamlPath info =
-  fromMaybe ".noroshi/configs" (info ^. #path) <> "/" <> getYamlName info
+getYamlPath :: FilePath -> ConfigInfo -> FilePath
+getYamlPath root info =
+  fromMaybe root (info ^. #path) <> "/" <> getYamlName info
 
-getOutputPath :: ConfigInfo -> FilePath
-getOutputPath info = mconcat
-  [ fromMaybe ".noroshi/out" (info ^. #path), "/"
+getOutputPath :: FilePath -> ConfigInfo -> FilePath
+getOutputPath root info = mconcat
+  [ fromMaybe root (info ^. #path), "/"
   , fromMaybe "" (Text.unpack . (<> "/") <$> info ^. #github)
   , getYamlName info
   ]

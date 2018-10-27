@@ -20,12 +20,14 @@ import           Noroshi.Utils           (maybeToEither)
 
 type BaseConfig = Value
 
-readBaseConfigs :: MonadIO m => [ConfigInfo] -> m (HashMap Text BaseConfig)
-readBaseConfigs = fmap HM.fromList . mapM readBaseConfigWithKey
+readBaseConfigs ::
+  MonadIO m => FilePath -> [ConfigInfo] -> m (HashMap Text BaseConfig)
+readBaseConfigs root = fmap HM.fromList . mapM (readBaseConfigWithKey root)
 
-readBaseConfigWithKey :: MonadIO m => ConfigInfo -> m (Text, BaseConfig)
-readBaseConfigWithKey info = do
-  conf <- Y.decodeFileThrow $ getYamlPath info
+readBaseConfigWithKey ::
+  MonadIO m => FilePath -> ConfigInfo -> m (Text, BaseConfig)
+readBaseConfigWithKey root info = do
+  conf <- Y.decodeFileThrow $ getYamlPath root info
   pure (info ^. #name, conf)
 
 generateConfig :: HashMap Text BaseConfig -> ConfigTemplate -> Either Text Value

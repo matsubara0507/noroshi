@@ -15,9 +15,18 @@ import           Instances.TH.Lift       ()
 import           Noroshi.Data.ConfigInfo (ConfigInfo)
 
 type Config = Record
-  '[ "bases"   >: [ConfigInfo]
-   , "configs" >: [ConfigInfo]
+  '[ "root"        >: FilePath
+   , "configs_dir" >: FilePath
+   , "outputs_dir" >: FilePath
+   , "bases"       >: [ConfigInfo]
+   , "configs"     >: [ConfigInfo]
    ]
+
+getConfigsPath :: Config -> FilePath
+getConfigsPath conf = conf ^. #root <> "/" <> conf ^. #configs_dir
+
+getOutputsPath :: Config -> FilePath
+getOutputsPath conf = conf ^. #root <> "/" <> conf ^. #outputs_dir
 
 defaultConfig :: Config
 defaultConfig = $$(YTH.decodeFile "template/config.yaml")

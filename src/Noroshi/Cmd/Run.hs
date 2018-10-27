@@ -12,7 +12,7 @@ import           Data.Aeson              (Value (..))
 import           Data.Extensible
 import qualified Data.Yaml               as Y
 import           Noroshi.Cmd.Options
-import           Noroshi.Config          (readConfig)
+import           Noroshi.Config
 import           Noroshi.Data.ConfigInfo
 import           Noroshi.Data.ConfigType (generateConfig, readBaseConfigs)
 import           Noroshi.Env
@@ -31,7 +31,7 @@ run opts = do
 run' :: RIO Env ()
 run' = do
   conf  <- asks (view #config)
-  bases <- readBaseConfigs (conf ^. #bases)
+  bases <- readBaseConfigs (getConfigsPath conf) (conf ^. #bases)
   forM_ (conf ^. #configs) $ \info -> do
     tpl <- readConfigTemplate info
     case generateConfig bases tpl of
@@ -40,13 +40,15 @@ run' = do
 
 readConfigTemplate :: ConfigInfo -> RIO Env Value
 readConfigTemplate info = do
-  let path = getYamlPath info
+  root <- asks (getConfigsPath . view #config)
+  let path = getYamlPath root info
   logDebug $ fromString ("read config template: " <> path)
   Y.decodeFileThrow path
 
 writeConfig :: ConfigInfo -> Value -> RIO Env ()
 writeConfig info conf = do
-  let path = getOutputPath info
+  root <- asks (getOutputsPath . view #config)
+  let path = getOutputPath root info
   createDirectoryIfMissing True (dropFileName path)
   logDebug $ fromString ("write config: " <> path)
   liftIO $ Y.encodeFile path conf
