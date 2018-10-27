@@ -20,13 +20,18 @@ import           Noroshi.Env
 
 run :: (MonadUnliftIO m, MonadThrow m) => Options -> m ()
 run opts = do
+  let path = opts ^. #config
   logOpts <- logOptionsHandle stdout (opts ^. #verbose)
-  config  <- readConfig ".noroshi/config.yaml"
+  config  <- readConfig path
   withLogFunc logOpts $ \logger -> do
     let env = #logger @= logger
            <: #config @= config
            <: nil
-    runRIO env run'
+    runRIO env $ do
+      whenM (not <$> doesFileExist path) $ do
+        logError (fromString $ "config is not found: " <> path)
+        logWarn (fromString $ "use default config: " <> show defaultConfig)
+      run'
 
 run' :: RIO Env ()
 run' = do
