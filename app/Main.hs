@@ -30,6 +30,7 @@ main = withGetOpt "[options] [input-file]" opts $ \r args ->
     opts = #version @= versionOpt
         <: #verbose @= verboseOpt
         <: #config  @= configOpt
+        <: #dry_run @= dryrunOpt
         <: nil
 
 showVersion :: Version -> String

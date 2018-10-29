@@ -15,6 +15,7 @@ type Options = Record
    , "version" >: Bool
    , "verbose" >: Bool
    , "config"  >: FilePath
+   , "dry_run" >: Bool
    ]
 
 versionOpt :: OptDescr' Bool
@@ -27,6 +28,9 @@ configOpt :: OptDescr' FilePath
 configOpt = optLastArgWithDefault ['c'] ["config"] path "CONFIG-YAML" "Use specify config yaml path"
   where
     path = defaultConfig ^. #root <> "/config.yaml"
+
+dryrunOpt :: OptDescr' Bool
+dryrunOpt = optFlag [] ["dry_run"] "Verify to could read bases and config"
 
 optLastArgWithDefault
   :: [Char]   -- ^ short option

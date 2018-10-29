@@ -11,8 +11,9 @@ import           Data.Extensible
 import           Noroshi.Config  (Config)
 
 type Env = Record
-  '[ "logger" >: LogFunc
-   , "config" >: Config
+  '[ "logger"  >: LogFunc
+   , "config"  >: Config
+   , "dry_run" >: Bool
    ]
 
 instance HasLogFunc Env where
