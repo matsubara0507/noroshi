@@ -13,6 +13,7 @@ import           Noroshi.Utils   (validateWith)
 
 type ConfigInfo = Record
   '[ "name"   >: Text
+   , "root"   >: Maybe FilePath
    , "path"   >: Maybe FilePath
    , "yaml"   >: Maybe Text
    , "github" >: Maybe Text
@@ -34,16 +35,22 @@ getGitHubOwnerAndRepo info = do
     validator (owner, repo) = not (Text.null owner || Text.null repo)
 
 getYamlPath :: FilePath -> ConfigInfo -> FilePath
-getYamlPath root info =
-  fromMaybe root (info ^. #path) <> "/" <> getYamlName info
+getYamlPath root info = mconcat
+  [ getRootPath root info
+  , fromMaybe "" (("/" <>) <$> info ^. #path)
+  , "/", getYamlName info
+  ]
 
 getOutputPath :: FilePath -> ConfigInfo -> FilePath
 getOutputPath root info = mconcat
-  [ fromMaybe root (info ^. #path), "/"
-  , fromMaybe "" (Text.unpack . (<> "/") <$> info ^. #github)
-  , getYamlName info
+  [ getRootPath root info
+  , fromMaybe "" (Text.unpack . ("/" <>) <$> info ^. #github)
+  , "/", getYamlName info
   ]
 
 getYamlName :: ConfigInfo -> FilePath
 getYamlName info =
   Text.unpack $ fromMaybe (info ^. #name <> ".yaml") (info ^. #yaml)
+
+getRootPath :: FilePath -> ConfigInfo -> FilePath
+getRootPath root info = fromMaybe root (info ^. #root)

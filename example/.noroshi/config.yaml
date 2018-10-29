@@ -1,8 +1,9 @@
 bases:
 - name: hoge
-  path: .
+  root: .
 
 configs:
 - name: fuga
+  path: fuga
   yaml: fugaga.yaml
   github: matsubara0507/fuga-config

@@ -37,7 +37,7 @@ run opts = do
 run' :: RIO Env ()
 run' = do
   conf  <- asks (view #config)
-  bases <- readBaseConfigs (getConfigsPath conf) (conf ^. #bases)
+  bases <- readBaseConfigs (conf ^. #root) (conf ^. #bases)
   forM_ bases $ \base ->
     logDebug (fromString $ "read base config: " <> show base)
   forM_ (conf ^. #configs) $ \info -> do
