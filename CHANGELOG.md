@@ -1,8 +1,11 @@
 # Changelog for noroshi
 
+### 0.1.2
 
-### 1.0.1
+- Feat: each configs can set root
 
-- dry_run option
+### 0.1.1
+
+- Feat: dry_run option
 
 ## Unreleased changes
